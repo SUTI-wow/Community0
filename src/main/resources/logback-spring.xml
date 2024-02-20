@@ -85,6 +85,7 @@
         </filter>
     </appender>
 
+    <!-- 对这个包设置成debug级别   -->
     <logger name="com.suti.community" level="debug"/>
 
     <!-- 根目录默认级别是info   -->
