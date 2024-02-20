@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suti.community.dao.UserMapper">
+    <sql id="selectFields">
+        id,username,password,salt,email,type,status,activation_code,header_url,create_time
+    </sql>
+
+    <sql id="insertFields">
+        username,password,salt,email,type,status,activation_code,header_url,create_time
+    </sql>
+
+    <!-- 查询需要声明返回类型   -->
+    <select id="selectById" resultType="User">
+        select <include refid="selectFields"></include>
+        from user
+        where id = #{id}
+    </select>
+
+    <select id="selectByName" resultType="User">
+        select id,username,password,salt,email,type,status,activation_code,header_url,create_time
+        from user
+        where username = #{username}
+    </select>
+
+    <select id="selectByEmail" resultType="User">
+        select id,username,password,salt,email,type,status,activation_code,header_url,create_time
+        from user
+        where email = #{email}
+    </select>
+
+    <!--  因为插入数据的时候是没有id的,id是通过mybatis查询数据库得到的 所以要增加一个keyProperty
+     这个函数的参数是个用户定义的类 所以需要声明 如果是简单的数据类型参数则不用声明-->
+    <insert id="insert" parameterType="User" keyProperty="id">
+        insert into user(<include refid="insertFields"></include>)
+        <!-- 注意这里写的值 是对应于User类的成员变量   -->
+        values(#{username}, #{password}, #{salt}, #{email}, #{type}, #{status}, #{activationCode}, #{headerUrl}, #{createTime})
+    </insert>
+
+    <update id="updateStatus">
+        update user set status = #{status} where id = #{id}
+    </update>
+
+    <update id="updateHeader">
+        update user set header_url = #{headerUrl} where id = #{id}
+    </update>
+
+    <update id="updatePassword">
+        update user set password = #{password} where id = #{id}
+    </update>
+
+</mapper>

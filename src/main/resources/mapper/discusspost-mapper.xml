@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suti.community.dao.DiscussPostMapper">
+    <sql id="selectFields">
+        id, user_id, title, content, type, status, create_time, comment_count, score
+    </sql>
+
+    <select id="selectDiscussPosts" resultType="DiscussPost">
+        select <include refid="selectFields"></include>
+        from discuss_post
+        <!--   帖子被拉黑的时候不展示     -->
+        where status !=2
+        <!--  MyBatis的动态SQL之if语句 通常跟在where后面      -->
+        <!--  对userId进行条件处理      -->
+        <if test="userId!=0">
+            and user_id = #{userId}
+        </if>
+        <!--  对查询结果的帖子进行排序 置顶往上      -->
+        order by type desc, create_time desc
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="selectDiscussPostRows" resultType="int">
+        select count(id)
+        from discuss_post
+        <!--   帖子被拉黑的时候不展示     -->
+        where status !=2
+        <!--  MyBatis的动态SQL之if语句 通常跟在where后面      -->
+        <!--  对userId进行条件处理      -->
+        <if test="userId!=0">
+            and user_id = #{userId}
+        </if>
+    </select>
+
+</mapper>
